@@ -16,102 +16,32 @@
     .category-button:hover { background-color: white; color: black; }
     .hp-bar { width: 100%; height: 20px; background-color: red; margin: 5px 0; }
     .hp-label { font-size: 1.2em; }
+    #bgmButton { background-color: white; color: black; padding: 5px; cursor: pointer; margin-bottom: 10px; }
   </style>
 </head>
 <body>
 
-
-<!-- ✅ BGM -->
-<audio id="bgmLoop" preload="auto" loop>
-  <source src="https://kogkoba.github.io/bunrui/sciencebgm.mp3" type="audio/mp3">
-</audio>
-
-<!-- ✅ ゲームコンテナ内にBGMのON/OFFボタンを配置 -->
-<div id="gameContainer">
-  <div id="messageBox">植物が あらわれた！</div>
-  <div class="hp-label">植物 HP</div>
-  <div class="hp-bar" id="plantHpBar"></div>
-  <img id="plantImage" src="" alt="植物の画像">
-  <div class="hp-label">プレイヤー HP</div>
-  <div class="hp-bar" id="playerHpBar"></div>
-  
-  <!-- ✅ BGMのON/OFFボタン -->
-  <button id="bgmToggle" class="bgm-button">BGM: ON</button>
-
-  <div id="categoryButtons">
-    <button class="category-button" data-category="アブラナ科">アブラナ科</button>
-    <button class="category-button" data-category="イネ科">イネ科</button>
-    <button class="category-button" data-category="ウリ科">ウリ科</button>
-    <button class="category-button" data-category="キク科">キク科</button>
-    <button class="category-button" data-category="マメ科">マメ科</button>
-    <button class="category-button" data-category="その他">その他</button>
-  </div>
-</div>
+<!-- 🎵 BGMコントロールボタン -->
+<button id="bgmButton">BGM: ON</button>
+<audio id="bgmLoop" src="https://kogkoba.github.io/bunrui/sciencebgm.mp3" loop></audio>
 
 <script>
-const bgm = document.getElementById("bgmLoop");
-const bgmToggle = document.getElementById("bgmToggle");
+document.addEventListener("click", () => {
+  const bgm = document.getElementById("bgmLoop");
+  bgm.play();
+});
 
-// 🔄 BGMの状態を保持する変数 (デフォルトはON)
-let isBgmPlaying = true;
-
-// ✅ ON/OFFボタンがクリックされたとき
-bgmToggle.addEventListener("click", () => {
-  if (isBgmPlaying) {
-    bgm.pause(); // 🔇 BGM停止
-    bgmToggle.textContent = "BGM: OFF"; // ボタンのテキストを変更
+// ✅ BGM ON/OFF ボタン機能
+document.getElementById("bgmButton").addEventListener("click", function() {
+  const bgm = document.getElementById("bgmLoop");
+  if (bgm.paused) {
+    bgm.play();
+    this.textContent = "BGM: ON";
   } else {
-    bgm.play(); // 🔊 BGM再生
-    bgmToggle.textContent = "BGM: ON";
+    bgm.pause();
+    this.textContent = "BGM: OFF";
   }
-  isBgmPlaying = !isBgmPlaying; // 状態を切り替え
 });
-
-// ✅ ユーザーが最初にクリックしたときにBGM再生
-document.addEventListener("click", async () => {
-  if (!isBgmPlaying) return; // OFFのときは再生しない
-  try {
-    await bgm.play();
-    console.log("✅ BGM再生成功！");
-  } catch (error) {
-    console.error("❌ BGM再生エラー:", error);
-  }
-}, { once: true }); // 🔥 1回だけ実行
-</script>
-
-<style>
-/* ✅ BGMボタンのデザイン */
-.bgm-button {
-  display: block;
-  margin: 10px auto;
-  padding: 5px 10px;
-  font-size: 1em;
-  cursor: pointer;
-  background-color: black;
-  color: white;
-  border: 1px solid white;
-  width: 120px;
-}
-.bgm-button:hover {
-  background-color: white;
-  color: black;
-}
-</style>
-
-<style>
-.bgm-button {
-  margin-top: 10px;
-  padding: 5px 10px;
-  font-size: 1em;
-  cursor: pointer;
-  background-color: black;
-  color: white;
-  border: 1px solid white;
-}
-.bgm-button:hover {
-  background-color: white;
-  color: black;
-}
 </script>
 
 <div id="gameContainer">
@@ -132,71 +62,36 @@ document.addEventListener("click", async () => {
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("✅ ページが完全に読み込まれました！");
-  
-  const IMAGE_FOLDER = "https://kogkoba.github.io/bunrui/";
-  
-  const plants = {
-    "アブラナ科": { "aburanna.png": "アブラナ", "inugarashi.png": "イヌガラシ", "kabu.png": "カブ" },
-    "イネ科": { "ine.png": "イネ", "enokorogusa.png": "エノコログサ", "ohisiba.png": "オヒシバ" }
-  };
+const IMAGE_FOLDER = "https://kogkoba.github.io/bunrui/";
 
-  let playerHp = 100, plantHp = 100;
-  let lastPlantName = "植物";
-  let isFirstEncounter = true;
+const plants = {
+  "アブラナ科": { "aburanna.png": "アブラナ", "inugarashi.png": "イヌガラシ", "kabu.png": "カブ", "kyabetu.png": "キャベツ", "daikon.png": "ダイコン", "nazuna.png": "ナズナ", "wasabi.png": "ワサビ" },
+  "イネ科": { "ine.png": "イネ", "enokorogusa.png": "エノコログサ", "ohisiba.png": "オヒシバ", "komugi.png": "コムギ", "sasa.png": "ササ", "susuki.png": "ススキ", "suzumenokatabira.png": "スズメノカタビラ", "suzumenoteppou.png": "スズメノテッポウ", "take.png": "タケ", "toumorokoshi.png": "トウモロコシ", "mehisiba.png": "メヒシバ" },
+  "ウリ科": { "amatyazuru.png": "アマチャヅル", "kabotya.png": "カボチャ", "karasuuri.png": "カラスウリ", "kyuuri.png": "キュウリ", "suika.png": "スイカ", "hetima.png": "ヘチマ", "yuugao.png": "ユウガオ" },
+  "キク科": { "onamomi.png": "オナモミ", "kiku.png": "キク", "kosumosu.png": "コスモス", "seitakaawadatisou.png": "セイタカアワダチソウ", "senndanngusa.png": "センダングサ", "daria.png": "ダリア", "tannpopo.png": "タンポポ", "noazami.png": "ノアザミ", "nogeshi.png": "ノゲシ", "haruzion.png": "ハルジオン", "himawari.png": "ヒマワリ", "himezyoon.png": "ヒメジョオン", "hyakunitisou.png": "ヒャクニチソウ", "ma-garetto.png": "マーガレット", "mari-go-rudo.png": "マリーゴールド" },
+  "マメ科": { "inngennmame.png": "インゲンマメ", "enndou.png": "エンドウ", "ozigisou.png": "オジギソウ", "karasunoenndou.png": "カラスノエンドウ", "kuzu.png": "クズ", "gennge.png": "ゲンゲ", "sirotumegusa.png": "シロツメグサ", "sui-topi.png": "スイートピー", "nemunoki.png": "ネムノキ", "hagi.png": "ハギ", "fuzi.png": "フジ" }
+};
 
-  function updateHpBars() {
-    document.getElementById("playerHpBar").style.width = `${Math.max(playerHp, 0)}%`;
-    document.getElementById("plantHpBar").style.width = `${Math.max(plantHp, 0)}%`;
-  }
+let playerHp = 100, plantHp = 100;
+let lastPlantName = "植物";
+let isFirstEncounter = true;
 
-  function getRandomPlant() {
-    const categoryKeys = Object.keys(plants);
-    const category = categoryKeys[Math.floor(Math.random() * categoryKeys.length)];
-    const plantKeys = Object.keys(plants[category]);
-    const plantFile = plantKeys[Math.floor(Math.random() * plantKeys.length)];
-    const plantName = plants[category][plantFile];
+function getRandomPlant() {
+  const category = Object.keys(plants)[Math.floor(Math.random() * Object.keys(plants).length)];
+  const plantFile = Object.keys(plants[category])[Math.floor(Math.random() * Object.keys(plants[category]).length)];
+  const plantName = plants[category][plantFile];
+  return { plantFile, plantName, category };
+}
 
-    console.log(`🌿 選ばれた植物: ${plantName} (${plantFile})`);
-    console.log(`🔗 画像パス: ${IMAGE_FOLDER + plantFile}`);
+function showQuestion() {
+  const { plantFile, plantName, category } = getRandomPlant();
+  document.getElementById("plantImage").src = IMAGE_FOLDER + plantFile;
+  document.getElementById("messageBox").textContent = isFirstEncounter ? "植物が あらわれた！" : `${lastPlantName} は ${plantName} をよんだ。`;
+  lastPlantName = plantName;
+  isFirstEncounter = false;
+}
 
-    return { plantFile, plantName, category };
-  }
-
-  function showQuestion() {
-    const { plantFile, plantName, category } = getRandomPlant();
-    document.getElementById("plantImage").src = IMAGE_FOLDER + plantFile;
-    document.getElementById("plantImage").dataset.category = category;
-
-    document.getElementById("messageBox").textContent = isFirstEncounter ? "植物が あらわれた！" : `${lastPlantName} は ${plantName} をよんだ。`;
-    
-    lastPlantName = plantName;
-    isFirstEncounter = false;
-    updateHpBars();
-  }
-
-  document.querySelectorAll(".category-button").forEach(button => {
-    button.addEventListener("click", (event) => {
-      const selectedCategory = event.target.dataset.category;
-      const correctCategory = document.getElementById("plantImage").dataset.category;
-      console.log(`🟢 選択: ${selectedCategory}, 正解: ${correctCategory}`);
-
-      if (selectedCategory === correctCategory) {
-        document.getElementById("messageBox").textContent = `正解！\n${lastPlantName} は ${correctCategory} だった！\n植物に10のダメージ！`;
-        plantHp -= 10;
-      } else {
-        document.getElementById("messageBox").textContent = `ミス！\n${lastPlantName} は ${correctCategory} だった！\nプレイヤーに10のダメージ！`;
-        playerHp -= 10;
-      }
-
-      updateHpBars();
-      setTimeout(() => { if (playerHp > 0 && plantHp > 0) showQuestion(); }, 1500);
-    });
-  });
-
-  showQuestion();
-});
+showQuestion();
 </script>
 
 </body>
