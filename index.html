@@ -53,9 +53,10 @@ const plants = {
 
 let playerHp = 50, plantHp = 50;
 function updateHpBars() {
-  document.getElementById("playerHpBar").style.width = `${playerHp}%`;
-  document.getElementById("plantHpBar").style.width = `${plantHp}%`;
+  document.getElementById("playerHpBar").style.width = `${Math.max(playerHp, 0)}%`;
+  document.getElementById("plantHpBar").style.width = `${Math.max(plantHp, 0)}%`;
 }
+
 
 function getRandomPlant() {
   const category = Object.keys(plants)[Math.floor(Math.random() * Object.keys(plants).length)];
