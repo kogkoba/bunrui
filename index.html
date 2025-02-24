@@ -83,6 +83,9 @@ function showQuestion() {
 
     // メッセージ更新
     document.getElementById("messageBox").textContent = `植物が ${plantName} をよんだ。`;
+
+    // ボタンのイベントリスナーを追加
+    setButtonEventListeners();
 }
 
 // ✅ HPの更新
@@ -92,32 +95,36 @@ function updateHpBars() {
 }
 
 // ✅ 選択肢のクリックイベントを追加
-document.querySelectorAll(".category-button").forEach(button => {
-    button.addEventListener("click", () => {
-        const selectedCategory = button.dataset.category;
+function setButtonEventListeners() {
+    document.querySelectorAll(".category-button").forEach(button => {
+        button.addEventListener("click", () => {
+            const selectedCategory = button.dataset.category;
 
-        if (selectedCategory === currentCategory) {
-            document.getElementById("messageBox").textContent = `正解！\n${currentCategory}だった！\n植物に10のダメージ`;
-            plantHp -= 10;
-        } else {
-            document.getElementById("messageBox").textContent = `ミス！\n植物は${currentCategory}だった。\n植物に10のダメージ`;
-            playerHp -= 10;
-        }
+            if (selectedCategory === currentCategory) {
+                document.getElementById("messageBox").textContent = `正解！\n${currentCategory}だった！\n植物に10のダメージ`;
+                plantHp -= 10;
+            } else {
+                document.getElementById("messageBox").textContent = `ミス！\n植物は${currentCategory}だった。\n植物に10のダメージ`;
+                playerHp -= 10;
+            }
 
-        updateHpBars();
-        if (playerHp <= 0) {
-            alert("ゲームオーバー！");
-            location.reload();
-        } else if (plantHp <= 0) {
-            alert("勝利！次の植物へ");
-            plantHp = 100;
-            showQuestion();
-        }
+            updateHpBars();
+            if (playerHp <= 0) {
+                alert("ゲームオーバー！");
+                location.reload();
+            } else if (plantHp <= 0) {
+                alert("勝利！次の植物へ");
+                plantHp = 100;
+                showQuestion();
+            }
+        });
     });
-});
+}
 
 // 🎮 ゲーム開始
-showQuestion();
+document.addEventListener("DOMContentLoaded", () => {
+    showQuestion();
+});
 </script>
 
 </body>
