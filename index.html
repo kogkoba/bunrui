@@ -69,7 +69,15 @@ function showQuestion() {
   document.getElementById("plantImage").src = IMAGE_FOLDER + plant;
   document.getElementById("plantImage").dataset.category = category;
   document.getElementById("messageBox").textContent = "植物が あらわれた！";
+  
+  // ⭐ ゲーム開始時にHPバーをリセット
+  if (playerHp === 50 && plantHp === 50) {
+    playerHp = 100;
+    plantHp = 100;
+    updateHpBars();
+  }
 }
+
 
 document.querySelectorAll(".category-button").forEach(button => {
   button.addEventListener("click", () => {
