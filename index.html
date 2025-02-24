@@ -45,7 +45,6 @@
 </div>
 
 <script>
-// ✅ 69個の植物データ
 const IMAGE_FOLDER = "https://kogkoba.github.io/bunrui/";
 const plants = {
   "アブラナ科": { "aburanna.png": "アブラナ", "inugarashi.png": "イヌガラシ", "kabu.png": "カブ", "kyabetu.png": "キャベツ", "daikon.png": "ダイコン", "nazuna.png": "ナズナ", "wasabi.png": "ワサビ" },
@@ -56,9 +55,9 @@ const plants = {
   "その他": { "asagao.png": "アサガオ", "ayame.png": "アヤメ" }
 };
 
-// 🎮 ゲーム状態
+// ゲーム状態
 let playerHp = 100, plantHp = 100;
-let currentCategory = ""; // 現在の植物の科
+let currentCategory = ""; // 正解の科
 
 // ✅ 植物をランダムに選択する
 function getRandomPlant() {
@@ -84,14 +83,18 @@ function showQuestion() {
     // メッセージ更新
     document.getElementById("messageBox").textContent = `植物が ${plantName} をよんだ。`;
 
-    // ボタンのイベントリスナーを追加
-    setButtonEventListeners();
+    // HPリセット（次の問題に進んだとき）
+    if (plantHp <= 0) {
+        plantHp = 100;
+        playerHp = Math.max(playerHp, 0); // プレイヤーのHPはそのまま
+        updateHpBars();
+    }
 }
 
 // ✅ HPの更新
 function updateHpBars() {
-  document.getElementById("playerHpBar").style.width = `${Math.max(playerHp, 0)}%`;
-  document.getElementById("plantHpBar").style.width = `${Math.max(plantHp, 0)}%`;
+    document.getElementById("playerHpBar").style.width = `${Math.max(playerHp, 0)}%`;
+    document.getElementById("plantHpBar").style.width = `${Math.max(plantHp, 0)}%`;
 }
 
 // ✅ 選択肢のクリックイベントを追加
@@ -109,13 +112,16 @@ function setButtonEventListeners() {
             }
 
             updateHpBars();
+
+            // HPが0になったら次の問題へ
             if (playerHp <= 0) {
                 alert("ゲームオーバー！");
                 location.reload();
             } else if (plantHp <= 0) {
-                alert("勝利！次の植物へ");
-                plantHp = 100;
-                showQuestion();
+                setTimeout(() => {
+                    alert("勝利！次の植物へ");
+                    showQuestion();
+                }, 1000); // 1秒待ってから次の問題へ
             }
         });
     });
@@ -124,6 +130,7 @@ function setButtonEventListeners() {
 // 🎮 ゲーム開始
 document.addEventListener("DOMContentLoaded", () => {
     showQuestion();
+    setButtonEventListeners();
 });
 </script>
 
