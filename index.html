@@ -75,8 +75,11 @@ document.querySelectorAll(".category-button").forEach(button => {
   button.addEventListener("click", () => {
     const selectedCategory = button.dataset.category;
     const correctCategory = document.getElementById("plantImage").dataset.category;
-    const correctText = correctCategory === "その他" ? "その他だった！" : `${correctCategory}科 だった！`;
     
+    // 🌟 修正ポイント 🌟
+    // 「その他」だけは「科」をつけない！
+    const correctText = correctCategory === "その他" ? "その他だった！" : `${correctCategory} だった！`;
+
     if (selectedCategory === correctCategory) {
       plantHp -= 10;
       document.getElementById("messageBox").textContent = `正解！\n${correctText}`;
