@@ -20,31 +20,13 @@
 </head>
 <body>
 
-<!-- ✅ BGMの `<audio>` タグを1つにする -->
-<audio id="bgmLoop" loop></audio>
+<!-- ✅ BGMを `<audio>` で直接再生 -->
+<audio id="bgmLoop" src="https://drive.google.com/uc?export=download&id=1ZYsRT4Pr39AYkD55mEZSsIyriKUuBwRs" loop></audio>
 
 <script>
-// ✅ Google Drive の MP3 ファイルURL
-const GOOGLE_DRIVE_MP3_URL = "https://drive.google.com/uc?export=download&id=1ZYsRT4Pr39AYkD55mEZSsIyriKUuBwRs";
-
-// ✅ Google Drive の MP3 をストリーミング再生する関数
-async function loadBGM() {
-  try {
-    const response = await fetch(GOOGLE_DRIVE_MP3_URL);
-    const blob = await response.blob();
-    const url = URL.createObjectURL(blob);
-    document.getElementById("bgmLoop").src = url;
-  } catch (error) {
-    console.error("BGMのロードに失敗しました:", error);
-  }
-}
-
 // ✅ ユーザーがクリックしたらBGMを再生
 document.addEventListener("click", () => {
-  loadBGM().then(() => {
-    const bgm = document.getElementById("bgmLoop");
-    bgm.play();
-  });
+  document.getElementById("bgmLoop").play();
 });
 </script>
 
@@ -100,14 +82,14 @@ document.querySelectorAll(".category-button").forEach(button => {
   button.addEventListener("click", () => {
     const selectedCategory = button.dataset.category;
     const correctCategory = document.getElementById("plantImage").dataset.category;
-    const correctText = correctCategory === "その他" ? "その他だった！" : `${correctCategory} だった！`;
+    const correctText = correctCategory === "その他" ? "その他だった。" : `${correctCategory}だった。`;
 
     if (selectedCategory === correctCategory) {
       plantHp -= 10;
-      document.getElementById("messageBox").textContent = `正解！\n${correctText}`;
+      document.getElementById("messageBox").textContent = `正解！\n${correctText}\n植物に10のダメージ`;
     } else {
       playerHp -= 10;
-      document.getElementById("messageBox").textContent = `ミス！\n${correctText}`;
+      document.getElementById("messageBox").textContent = `ミス！\n植物は${correctText}\nプレイヤーに10のダメージ`;
     }
 
     updateHpBars();
