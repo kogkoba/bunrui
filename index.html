@@ -64,6 +64,35 @@ bgmButton.addEventListener("click", () => {
 
 <script>
 // ✅ 69個の植物データ（省略）
+const IMAGE_FOLDER = "https://kogkoba.github.io/bunrui/";
+
+// 植物をランダムに選択する関数
+function getRandomPlant() {
+    const categoryKeys = Object.keys(plants);
+    const category = categoryKeys[Math.floor(Math.random() * categoryKeys.length)];
+    const plantKeys = Object.keys(plants[category]);
+    const plantFile = plantKeys[Math.floor(Math.random() * plantKeys.length)];
+    const plantName = plants[category][plantFile];
+
+    return { plantFile, plantName, category };
+}
+
+// 画像を正しくセットする
+function showQuestion() {
+    const { plantFile, plantName, category } = getRandomPlant();
+    const plantImage = document.getElementById("plantImage");
+
+    // 画像URLの生成
+    const imageUrl = IMAGE_FOLDER + plantFile;
+    plantImage.src = imageUrl;
+
+    // デバッグ用にコンソール出力
+    console.log("選ばれた植物:", plantName, `(${plantFile})`);
+    console.log("画像パス:", imageUrl);
+
+    document.getElementById("plantImage").dataset.category = category;
+    document.getElementById("messageBox").textContent = `植物が ${plantName} をよんだ。`;
+}
 
 let playerHp = 100, plantHp = 100;
 function updateHpBars() {
