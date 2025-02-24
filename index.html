@@ -51,12 +51,11 @@ const plants = {
   "その他": ["asagao.png", "ayame.png", "oobako.png", "osiroibana.png", "katabami.png", "guraziorasu.png", "sakura.png", "zyagaimo.png", "suisen.png", "tutuzi.png", "tubaki.png", "tuyukusa.png", "higannbana.png", "hiyasinnsu.png", "housennka.png", "yadorigi.png", "yamabuki.png", "yuri.png"]
 };
 
-let playerHp = 50, plantHp = 50;
+let playerHp = 100, plantHp = 100;
 function updateHpBars() {
   document.getElementById("playerHpBar").style.width = `${Math.max(playerHp, 0)}%`;
   document.getElementById("plantHpBar").style.width = `${Math.max(plantHp, 0)}%`;
 }
-
 
 function getRandomPlant() {
   const category = Object.keys(plants)[Math.floor(Math.random() * Object.keys(plants).length)];
@@ -64,25 +63,13 @@ function getRandomPlant() {
   return { plant, category };
 }
 
-
-
 function showQuestion() {
   const { plant, category } = getRandomPlant();
   document.getElementById("plantImage").src = IMAGE_FOLDER + plant;
   document.getElementById("plantImage").dataset.category = category;
   document.getElementById("messageBox").textContent = "植物が あらわれた！";
-  
-  // ⭐ 1問目開始時にHPを100%にリセット
-  if (playerHp === 50 && plantHp === 50) {
-    playerHp = 100;
-    plantHp = 100;
-    updateHpBars();
-  }
-
-
-  }
+  updateHpBars();
 }
-
 
 document.querySelectorAll(".category-button").forEach(button => {
   button.addEventListener("click", () => {
