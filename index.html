@@ -24,7 +24,6 @@
 <audio id="bgmLoop" src="https://drive.google.com/uc?export=download&id=1ZYsRT4Pr39AYkD55mEZSsIyriKUuBwRs" loop></audio>
 
 <script>
-// ✅ ユーザーがクリックしたらBGMを再生
 document.addEventListener("click", () => {
   document.getElementById("bgmLoop").play();
 });
@@ -48,49 +47,52 @@ document.addEventListener("click", () => {
 </div>
 
 <script>
-const IMAGE_FOLDER = "https://kogkoba.github.io/bunrui/";
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("✅ ページが完全に読み込まれました！");
+  
+  const IMAGE_FOLDER = "https://kogkoba.github.io/bunrui/";
+  
+  const plants = {
+    "アブラナ科": { "aburanna.png": "アブラナ", "inugarashi.png": "イヌガラシ", "kabu.png": "カブ", "kyabetu.png": "キャベツ", "daikon.png": "ダイコン", "nazuna.png": "ナズナ", "wasabi.png": "ワサビ" },
+    "イネ科": { "ine.png": "イネ", "enokorogusa.png": "エノコログサ", "ohisiba.png": "オヒシバ", "komugi.png": "コムギ", "sasa.png": "ササ", "susuki.png": "ススキ", "suzumenokatabira.png": "スズメノカタビラ", "suzumenoteppou.png": "スズメノテッポウ", "take.png": "タケ", "toumorokoshi.png": "トウモロコシ", "mehisiba.png": "メヒシバ" }
+  };
 
-// ✅ 全69種の植物データ
-const plants = {
-  "アブラナ科": { "aburanna.png": "アブラナ", "inugarashi.png": "イヌガラシ", "kabu.png": "カブ", "kyabetu.png": "キャベツ", "daikon.png": "ダイコン", "nazuna.png": "ナズナ", "wasabi.png": "ワサビ" },
-  "イネ科": { "ine.png": "イネ", "enokorogusa.png": "エノコログサ", "ohisiba.png": "オヒシバ", "komugi.png": "コムギ", "sasa.png": "ササ", "susuki.png": "ススキ", "suzumenokatabira.png": "スズメノカタビラ", "suzumenoteppou.png": "スズメノテッポウ", "take.png": "タケ", "toumorokoshi.png": "トウモロコシ", "mehisiba.png": "メヒシバ" },
-  "ウリ科": { "amatyazuru.png": "アマチャヅル", "kabotya.png": "カボチャ", "karasuuri.png": "カラスウリ", "kyuuri.png": "キュウリ", "suika.png": "スイカ", "hetima.png": "ヘチマ", "yuugao.png": "ユウガオ" },
-  "キク科": { "onamomi.png": "オナモミ", "kiku.png": "キク", "kosumosu.png": "コスモス", "seitakaawadatisou.png": "セイタカアワダチソウ", "senndanngusa.png": "センダングサ", "daria.png": "ダリア", "tannpopo.png": "タンポポ", "noazami.png": "ノアザミ", "nogeshi.png": "ノゲシ", "haruzion.png": "ハルジオン", "himawari.png": "ヒマワリ", "himezyoon.png": "ヒメジョオン", "hyakunitisou.png": "ヒャクニチソウ", "ma-garetto.png": "マーガレット", "mari-go-rudo.png": "マリーゴールド" },
-  "マメ科": { "inngennmame.png": "インゲンマメ", "enndou.png": "エンドウ", "ozigisou.png": "オジギソウ", "karasunoenndou.png": "カラスノエンドウ", "kuzu.png": "クズ", "gennge.png": "ゲンゲ", "sirotumegusa.png": "シロツメグサ", "sui-topi.png": "スイートピー", "nemunoki.png": "ネムノキ", "hagi.png": "ハギ", "fuzi.png": "フジ" }
-};
+  let playerHp = 100, plantHp = 100;
+  let lastPlantName = "植物";
+  let isFirstEncounter = true;
 
-let playerHp = 100, plantHp = 100;
-let lastPlantName = "植物";
-let isFirstEncounter = true;
+  function updateHpBars() {
+    document.getElementById("playerHpBar").style.width = `${Math.max(playerHp, 0)}%`;
+    document.getElementById("plantHpBar").style.width = `${Math.max(plantHp, 0)}%`;
+  }
 
-function updateHpBars() {
-  document.getElementById("playerHpBar").style.width = `${Math.max(playerHp, 0)}%`;
-  document.getElementById("plantHpBar").style.width = `${Math.max(plantHp, 0)}%`;
-}
+  function getRandomPlant() {
+    const categoryKeys = Object.keys(plants);
+    const category = categoryKeys[Math.floor(Math.random() * categoryKeys.length)];
+    const plantKeys = Object.keys(plants[category]);
+    const plantFile = plantKeys[Math.floor(Math.random() * plantKeys.length)];
+    const plantName = plants[category][plantFile];
 
-function getRandomPlant() {
-  const categoryKeys = Object.keys(plants);
-  const category = categoryKeys[Math.floor(Math.random() * categoryKeys.length)];
-  const plantKeys = Object.keys(plants[category]);
-  const plantFile = plantKeys[Math.floor(Math.random() * plantKeys.length)];
-  const plantName = plants[category][plantFile];
-  return { plantFile, plantName, category };
-}
+    console.log(`🌿 選ばれた植物: ${plantName} (${plantFile})`);
+    console.log(`🔗 画像パス: ${IMAGE_FOLDER + plantFile}`);
 
-function showQuestion() {
-  const { plantFile, plantName, category } = getRandomPlant();
-  document.getElementById("plantImage").src = IMAGE_FOLDER + plantFile;
-  document.getElementById("plantImage").dataset.category = category;
-  document.getElementById("messageBox").textContent = isFirstEncounter ? "植物が あらわれた！" : `${lastPlantName} は ${plantName} をよんだ。`;
-  lastPlantName = plantName;
-  isFirstEncounter = false;
-  updateHpBars();
-}
+    return { plantFile, plantName, category };
+  }
 
-window.onload = () => {
-  console.log("✅ ゲーム開始！");
+  function showQuestion() {
+    const { plantFile, plantName, category } = getRandomPlant();
+    document.getElementById("plantImage").src = IMAGE_FOLDER + plantFile;
+    document.getElementById("plantImage").dataset.category = category;
+
+    document.getElementById("messageBox").textContent = isFirstEncounter ? "植物が あらわれた！" : `${lastPlantName} は ${plantName} をよんだ。`;
+    
+    lastPlantName = plantName;
+    isFirstEncounter = false;
+    updateHpBars();
+  }
+
   showQuestion();
-};
+});
 </script>
 
 </body>
