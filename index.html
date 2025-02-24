@@ -21,13 +21,19 @@
 <body>
 
 
-<!-- ✅ 修正後のBGM設定 -->
-<audio id="bgmLoop" src="https://kogkoba.github.io/bunrui/sciencebgm.mp3" loop></audio>
+<audio id="bgmLoop" preload="auto"></audio>
 
 <script>
-document.addEventListener("click", () => {
-  const audio = document.getElementById("bgmLoop");
-  audio.play().catch(error => console.error("❌ BGM再生エラー:", error));
+document.addEventListener("click", async () => {
+    const audio = document.getElementById("bgmLoop");
+    audio.src = "https://kogkoba.github.io/bunrui/sciencebgm.mp3";
+
+    try {
+        await audio.play();
+        console.log("✅ BGM再生成功！");
+    } catch (error) {
+        console.error("❌ BGM再生エラー:", error);
+    }
 });
 </script>
 
