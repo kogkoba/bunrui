@@ -6,7 +6,7 @@
   <style>
     body { background-color: black; color: white; text-align: center; font-family: 'Courier New', monospace; }
     #gameContainer { display: inline-block; border: 2px solid white; padding: 10px; width: 320px; background-color: black; }
-    #messageBox { border: 2px solid white; padding: 5px; margin-bottom: 10px; font-size: 1.2em; height: 4.5em; display: flex; align-items: center; justify-content: center; }
+    #messageBox { border: 2px solid white; padding: 10px; margin-bottom: 10px; font-size: 1.2em; height: auto; min-height: 4.5em; white-space: pre-line; }
     #plantImage {
       width: 200px; height: 200px; object-fit: contain;
       display: block; margin: 10px auto; border: 2px solid white;
@@ -75,17 +75,21 @@ document.querySelectorAll(".category-button").forEach(button => {
   button.addEventListener("click", () => {
     const selectedCategory = button.dataset.category;
     const correctCategory = document.getElementById("plantImage").dataset.category;
+    const correctText = correctCategory === "その他" ? "その他だった！" : `${correctCategory}科 だった！`;
+    
     if (selectedCategory === correctCategory) {
       plantHp -= 10;
-      document.getElementById("messageBox").textContent = `正解！${correctCategory} に 10 のダメージ！`;
+      document.getElementById("messageBox").textContent = `正解！\n${correctText}`;
     } else {
       playerHp -= 10;
-      document.getElementById("messageBox").textContent = `ミス！${correctCategory}科 だった！プレイヤーに 10 のダメージ！`;
+      document.getElementById("messageBox").textContent = `ミス！\n${correctText}`;
     }
+
     updateHpBars();
-    if (plantHp <= 0) setTimeout(() => location.reload(), 1000);
-    else if (playerHp <= 0) setTimeout(() => location.reload(), 1000);
-    else setTimeout(showQuestion, 1000);
+    setTimeout(() => {
+      if (plantHp <= 0 || playerHp <= 0) location.reload();
+      else showQuestion();
+    }, 1500); // 1.5秒間メッセージを表示
   });
 });
 
