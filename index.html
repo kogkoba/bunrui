@@ -81,15 +81,16 @@ function showQuestion() {
   const { plantFile, plantName, category } = getRandomPlant();
   document.getElementById("plantImage").src = IMAGE_FOLDER + plantFile;
   document.getElementById("plantImage").dataset.category = category;
-
   document.getElementById("messageBox").textContent = isFirstEncounter ? "植物が あらわれた！" : `${lastPlantName} は ${plantName} をよんだ。`;
-
   lastPlantName = plantName;
   isFirstEncounter = false;
   updateHpBars();
 }
 
-showQuestion();
+window.onload = () => {
+  console.log("✅ ゲーム開始！");
+  showQuestion();
+};
 </script>
 
 </body>
