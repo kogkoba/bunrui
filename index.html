@@ -27,20 +27,33 @@
 <button id="bgmButton">BGM: OFF</button>
 
 <script>
+<script>
 // ✅ BGM ON/OFFボタンの処理
 let bgmPlaying = false;
 const bgm = document.getElementById("bgmLoop");
 const bgmButton = document.getElementById("bgmButton");
 
+// 初回のクリックでBGM再生できるようにする
+document.addEventListener("click", () => {
+    if (!bgmPlaying) {
+        bgm.play().then(() => {
+            console.log("🎵 BGM 再生開始");
+            bgmPlaying = true;
+            bgmButton.textContent = "BGM: ON";
+        }).catch(error => console.error("BGM再生エラー:", error));
+    }
+}, { once: true });
+
+// BGM ON/OFF トグル機能
 bgmButton.addEventListener("click", () => {
-  if (bgmPlaying) {
-    bgm.pause();
-    bgmButton.textContent = "BGM: OFF";
-  } else {
-    bgm.play().catch(error => console.error("BGM再生エラー:", error));
-    bgmButton.textContent = "BGM: ON";
-  }
-  bgmPlaying = !bgmPlaying;
+    if (bgmPlaying) {
+        bgm.pause();
+        bgmButton.textContent = "BGM: OFF";
+    } else {
+        bgm.play().catch(error => console.error("BGM再生エラー:", error));
+        bgmButton.textContent = "BGM: ON";
+    }
+    bgmPlaying = !bgmPlaying;
 });
 </script>
 
