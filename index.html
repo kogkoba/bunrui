@@ -138,17 +138,22 @@ const plantCategories = {
   "アブラナ": "アブラナ科",
   "イネ": "イネ科",
   "ウリ": "ウリ科",
-  "キク": "キク科"
+  "キク": "キク科",
+  "キャベツ": "アブラナ科",
+  "ダイコン": "アブラナ科",
+  "ナズナ": "アブラナ科",
+  "ワサビ": "アブラナ科",
+  "コムギ": "イネ科",
+  "ススキ": "イネ科",
+  "トウモロコシ": "イネ科",
+  "カボチャ": "ウリ科",
+  "ヘチマ": "ウリ科",
+  "ヒマワリ": "キク科",
+  "タンポポ": "キク科",
+  "ノアザミ": "キク科",
+  "マリーゴールド": "キク科",
+  "その他": "その他"
 };
-
-let playerHp = 50;
-let plantHp = 50;
-let currentImage = "";
-
-function updateHpBars() {
-  document.getElementById("playerHpBar").style.width = `${(playerHp / 50) * 100}%`;
-  document.getElementById("plantHpBar").style.width = `${(plantHp / 50) * 100}%`;
-}
 
 function showQuestion() {
   let keys = Object.keys(plantData);
@@ -173,15 +178,14 @@ function showQuestion() {
 function handleAnswer(category) {
   let messageBox = document.getElementById("messageBox");
   let plantName = plantData[currentImage];
-  let correctCategory = plantName;
-  let plantFamily = plantCategories[correctCategory] || "";
+  let correctCategory = plantCategories[plantName] || "その他";
 
   if (correctCategory === category) {
     plantHp -= 10;
-    messageBox.innerHTML = `正解！ 植物にダメージ！<br>${plantName} は ${plantFamily} だ！`;
+    messageBox.innerHTML = `正解！ 植物にダメージ！<br>${plantName} は ${correctCategory} だ！`;
   } else {
     playerHp -= 10;
-    messageBox.innerHTML = `ミス！ プレイヤーにダメージ！<br>${plantName} は ${plantFamily} だ！`;
+    messageBox.innerHTML = `ミス！ プレイヤーにダメージ！<br>${plantName} は ${correctCategory} だ！`;
   }
 
   updateHpBars();
