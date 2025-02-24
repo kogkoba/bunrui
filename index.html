@@ -64,10 +64,7 @@ function getRandomPlant() {
   return { plant, category };
 }
 
-function updateHpBars() {
-  document.getElementById("playerHpBar").style.width = `${Math.max(playerHp, 0)}%`;
-  document.getElementById("plantHpBar").style.width = `${Math.max(plantHp, 0)}%`;
-}
+
 
 function showQuestion() {
   const { plant, category } = getRandomPlant();
@@ -81,7 +78,7 @@ function showQuestion() {
     plantHp = 100;
     updateHpBars();
   }
-}
+
 
   }
 }
