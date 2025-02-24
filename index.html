@@ -50,17 +50,16 @@ document.addEventListener("click", () => {
 <script>
 const IMAGE_FOLDER = "https://kogkoba.github.io/bunrui/";
 const plants = {
-  "アブラナ科": ["aburanna", "inugarashi", "kabu", "kyabetu", "daikon", "nazuna", "wasabi"],
-  "イネ科": ["ine", "enokorogusa", "ohisiba", "komugi", "sasa", "susuki", "suzumenokatabira", "suzumenoteppou", "take", "toumorokoshi", "mehisiba"],
-  "ウリ科": ["amatyazuru", "kabotya", "karasuuri", "kyuuri", "suika", "hetima", "yuugao"],
-  "キク科": ["onamomi", "kiku", "kosumosu", "seitakaawadatisou", "senndanngusa", "daria", "tannpopo", "noazami", "nogeshi", "haruzion", "himawari", "himezyoon", "hyakunitisou", "ma-garetto", "mari-go-rudo"],
-  "マメ科": ["inngennmame", "enndou", "ozigisou", "karasunoenndou", "kuzu", "gennge", "sirotumegusa", "sui-topi", "nemunoki", "hagi", "fuzi"],
-  "その他": ["asagao", "ayame", "oobako", "osiroibana", "katabami", "guraziorasu", "sakura", "zyagaimo", "suisen", "tutuzi", "tubaki", "tuyukusa", "higannbana", "hiyasinnsu", "housennka", "yadorigi", "yamabuki", "yuri"]
+  "アブラナ科": { "aburanna.png": "アブラナ", "inugarashi.png": "イヌガラシ", "kabu.png": "カブ", "kyabetu.png": "キャベツ", "daikon.png": "ダイコン", "nazuna.png": "ナズナ", "wasabi.png": "ワサビ" },
+  "イネ科": { "ine.png": "イネ", "enokorogusa.png": "エノコログサ", "ohisiba.png": "オヒシバ", "komugi.png": "コムギ", "sasa.png": "ササ", "susuki.png": "ススキ", "suzumenokatabira.png": "スズメノカタビラ", "suzumenoteppou.png": "スズメノテッポウ", "take.png": "タケ", "toumorokoshi.png": "トウモロコシ", "mehisiba.png": "メヒシバ" },
+  "ウリ科": { "amatyazuru.png": "アマチャヅル", "kabotya.png": "カボチャ", "karasuuri.png": "カラスウリ", "kyuuri.png": "キュウリ", "suika.png": "スイカ", "hetima.png": "ヘチマ", "yuugao.png": "ユウガオ" },
+  "キク科": { "onamomi.png": "オナモミ", "kiku.png": "キク", "kosumosu.png": "コスモス", "seitakaawadatisou.png": "セイタカアワダチソウ", "senndanngusa.png": "センダングサ", "daria.png": "ダリア", "tannpopo.png": "タンポポ", "noazami.png": "ノアザミ", "nogeshi.png": "ノゲシ", "haruzion.png": "ハルジオン", "himawari.png": "ヒマワリ", "himezyoon.png": "ヒメジョオン", "hyakunitisou.png": "ヒャクニチソウ", "ma-garetto.png": "マーガレット", "mari-go-rudo.png": "マリーゴールド" },
+  "マメ科": { "inngennmame.png": "インゲンマメ", "enndou.png": "エンドウ", "ozigisou.png": "オジギソウ", "karasunoenndou.png": "カラスノエンドウ", "kuzu.png": "クズ", "gennge.png": "ゲンゲ", "sirotumegusa.png": "シロツメグサ", "sui-topi.png": "スイートピー", "nemunoki.png": "ネムノキ", "hagi.png": "ハギ", "fuzi.png": "フジ" }
 };
 
 let playerHp = 100, plantHp = 100;
-let lastPlantName = ""; // 前回の植物の名前
-let isFirstEncounter = true; // 最初の戦闘かどうか
+let lastPlantName = "植物"; // 初回は「植物」
+let isFirstEncounter = true; 
 
 function updateHpBars() {
   document.getElementById("playerHpBar").style.width = `${Math.max(playerHp, 0)}%`;
@@ -69,47 +68,23 @@ function updateHpBars() {
 
 function getRandomPlant() {
   const category = Object.keys(plants)[Math.floor(Math.random() * Object.keys(plants).length)];
-  const plant = plants[category][Math.floor(Math.random() * plants[category].length)];
-  return { plant, category };
+  const plantKeys = Object.keys(plants[category]);
+  const plantFile = plantKeys[Math.floor(Math.random() * plantKeys.length)];
+  const plantName = plants[category][plantFile];
+  return { plantFile, plantName, category };
 }
 
 function showQuestion() {
-  const { plant, category } = getRandomPlant();
-  document.getElementById("plantImage").src = IMAGE_FOLDER + plant + ".png";
+  const { plantFile, plantName, category } = getRandomPlant();
+  document.getElementById("plantImage").src = IMAGE_FOLDER + plantFile;
   document.getElementById("plantImage").dataset.category = category;
 
-  if (isFirstEncounter) {
-    document.getElementById("messageBox").textContent = "植物が あらわれた！";
-    isFirstEncounter = false;
-  } else {
-    document.getElementById("messageBox").textContent = `植物は ${plant} をよんだ。`;
-  }
+  document.getElementById("messageBox").textContent = isFirstEncounter ? "植物が あらわれた！" : `${lastPlantName} は ${plantName} をよんだ。`;
 
-  lastPlantName = plant; // 今回の植物を記録
+  lastPlantName = plantName;
+  isFirstEncounter = false;
   updateHpBars();
 }
-
-document.querySelectorAll(".category-button").forEach(button => {
-  button.addEventListener("click", () => {
-    const selectedCategory = button.dataset.category;
-    const correctCategory = document.getElementById("plantImage").dataset.category;
-    const correctText = correctCategory === "その他" ? "その他だった。" : `${correctCategory}だった。`;
-
-    if (selectedCategory === correctCategory) {
-      plantHp -= 10;
-      document.getElementById("messageBox").textContent = `正解！\n${lastPlantName} は ${correctText}\n植物に10のダメージ`;
-    } else {
-      playerHp -= 10;
-      document.getElementById("messageBox").textContent = `ミス！\n${lastPlantName} は ${correctText}\nプレイヤーに10のダメージ`;
-    }
-
-    updateHpBars();
-    setTimeout(() => {
-      if (plantHp <= 0 || playerHp <= 0) location.reload();
-      else showQuestion();
-    }, 1500);
-  });
-});
 
 showQuestion();
 </script>
