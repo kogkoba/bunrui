@@ -45,9 +45,8 @@
 </div>
 
 <script>
-const IMAGE_FOLDER = "https://kogkoba.github.io/bunrui/";
-
 // ✅ 69個の植物データ
+const IMAGE_FOLDER = "https://kogkoba.github.io/bunrui/";
 const plants = {
   "アブラナ科": { "aburanna.png": "アブラナ", "inugarashi.png": "イヌガラシ", "kabu.png": "カブ", "kyabetu.png": "キャベツ", "daikon.png": "ダイコン", "nazuna.png": "ナズナ", "wasabi.png": "ワサビ" },
   "イネ科": { "ine.png": "イネ", "enokorogusa.png": "エノコログサ", "ohisiba.png": "オヒシバ" },
@@ -57,17 +56,23 @@ const plants = {
   "その他": { "asagao.png": "アサガオ", "ayame.png": "アヤメ" }
 };
 
-// 🌱 植物をランダムに選択する
+// 🎮 ゲーム状態
+let playerHp = 100, plantHp = 100;
+let currentCategory = ""; // 現在の植物の科
+
+// ✅ 植物をランダムに選択する
 function getRandomPlant() {
     const categoryKeys = Object.keys(plants);
     const category = categoryKeys[Math.floor(Math.random() * categoryKeys.length)];
     const plantKeys = Object.keys(plants[category]);
     const plantFile = plantKeys[Math.floor(Math.random() * plantKeys.length)];
     const plantName = plants[category][plantFile];
+
+    currentCategory = category; // 正解のカテゴリーをセット
     return { plantFile, plantName, category };
 }
 
-// 🌿 画像をセット
+// ✅ 画像と問題をセット
 function showQuestion() {
     const { plantFile, plantName, category } = getRandomPlant();
     const plantImage = document.getElementById("plantImage");
@@ -76,40 +81,39 @@ function showQuestion() {
     const imageUrl = IMAGE_FOLDER + plantFile;
     plantImage.src = imageUrl;
 
-    // デバッグ用にコンソール出力
-    console.log("選ばれた植物:", plantName, `(${plantFile})`);
-    console.log("画像パス:", imageUrl);
-
-    document.getElementById("plantImage").dataset.category = category;
+    // メッセージ更新
     document.getElementById("messageBox").textContent = `植物が ${plantName} をよんだ。`;
 }
 
-// ✅ BGM ON/OFFボタンの処理
-let bgmPlaying = false;
-const bgm = document.getElementById("bgmLoop");
-const bgmButton = document.getElementById("bgmButton");
+// ✅ HPの更新
+function updateHpBars() {
+  document.getElementById("playerHpBar").style.width = `${Math.max(playerHp, 0)}%`;
+  document.getElementById("plantHpBar").style.width = `${Math.max(plantHp, 0)}%`;
+}
 
-// 初回のクリックでBGM再生できるようにする
-document.addEventListener("click", () => {
-    if (!bgmPlaying) {
-        bgm.play().then(() => {
-            console.log("🎵 BGM 再生開始");
-            bgmPlaying = true;
-            bgmButton.textContent = "BGM: ON";
-        }).catch(error => console.error("BGM再生エラー:", error));
-    }
-}, { once: true });
+// ✅ 選択肢のクリックイベントを追加
+document.querySelectorAll(".category-button").forEach(button => {
+    button.addEventListener("click", () => {
+        const selectedCategory = button.dataset.category;
 
-// BGM ON/OFF トグル機能
-bgmButton.addEventListener("click", () => {
-    if (bgmPlaying) {
-        bgm.pause();
-        bgmButton.textContent = "BGM: OFF";
-    } else {
-        bgm.play().catch(error => console.error("BGM再生エラー:", error));
-        bgmButton.textContent = "BGM: ON";
-    }
-    bgmPlaying = !bgmPlaying;
+        if (selectedCategory === currentCategory) {
+            document.getElementById("messageBox").textContent = `正解！\n${currentCategory}だった！\n植物に10のダメージ`;
+            plantHp -= 10;
+        } else {
+            document.getElementById("messageBox").textContent = `ミス！\n植物は${currentCategory}だった。\n植物に10のダメージ`;
+            playerHp -= 10;
+        }
+
+        updateHpBars();
+        if (playerHp <= 0) {
+            alert("ゲームオーバー！");
+            location.reload();
+        } else if (plantHp <= 0) {
+            alert("勝利！次の植物へ");
+            plantHp = 100;
+            showQuestion();
+        }
+    });
 });
 
 // 🎮 ゲーム開始
