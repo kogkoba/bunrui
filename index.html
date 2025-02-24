@@ -64,17 +64,25 @@ function getRandomPlant() {
   return { plant, category };
 }
 
+function updateHpBars() {
+  document.getElementById("playerHpBar").style.width = `${Math.max(playerHp, 0)}%`;
+  document.getElementById("plantHpBar").style.width = `${Math.max(plantHp, 0)}%`;
+}
+
 function showQuestion() {
   const { plant, category } = getRandomPlant();
   document.getElementById("plantImage").src = IMAGE_FOLDER + plant;
   document.getElementById("plantImage").dataset.category = category;
   document.getElementById("messageBox").textContent = "植物が あらわれた！";
   
-  // ⭐ ゲーム開始時にHPバーをリセット
+  // ⭐ 1問目開始時にHPを100%にリセット
   if (playerHp === 50 && plantHp === 50) {
     playerHp = 100;
     plantHp = 100;
     updateHpBars();
+  }
+}
+
   }
 }
 
