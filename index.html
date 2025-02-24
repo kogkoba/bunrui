@@ -21,11 +21,19 @@
 <body>
 
 <!-- ✅ BGM -->
-<audio id="bgmLoop" src="https://drive.google.com/uc?export=download&id=1ZYsRT4Pr39AYkD55mEZSsIyriKUuBwRs" loop></audio>
+<audio id="bgmLoop" loop></audio>
 
 <script>
-document.addEventListener("click", () => {
-  document.getElementById("bgmLoop").play();
+document.addEventListener("click", async () => {
+  const audio = document.getElementById("bgmLoop");
+  if (!audio.src) {
+    console.log("🎵 BGMをロード中...");
+    const response = await fetch("https://drive.google.com/uc?export=download&id=1ZYsRT4Pr39AYkD55mEZSsIyriKUuBwRs");
+    const blob = await response.blob();
+    const objectURL = URL.createObjectURL(blob);
+    audio.src = objectURL;
+  }
+  audio.play();
 });
 </script>
 
@@ -53,8 +61,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const IMAGE_FOLDER = "https://kogkoba.github.io/bunrui/";
   
   const plants = {
-    "アブラナ科": { "aburanna.png": "アブラナ", "inugarashi.png": "イヌガラシ", "kabu.png": "カブ", "kyabetu.png": "キャベツ", "daikon.png": "ダイコン", "nazuna.png": "ナズナ", "wasabi.png": "ワサビ" },
-    "イネ科": { "ine.png": "イネ", "enokorogusa.png": "エノコログサ", "ohisiba.png": "オヒシバ", "komugi.png": "コムギ", "sasa.png": "ササ", "susuki.png": "ススキ", "suzumenokatabira.png": "スズメノカタビラ", "suzumenoteppou.png": "スズメノテッポウ", "take.png": "タケ", "toumorokoshi.png": "トウモロコシ", "mehisiba.png": "メヒシバ" }
+    "アブラナ科": { "aburanna.png": "アブラナ", "inugarashi.png": "イヌガラシ", "kabu.png": "カブ" },
+    "イネ科": { "ine.png": "イネ", "enokorogusa.png": "エノコログサ", "ohisiba.png": "オヒシバ" }
   };
 
   let playerHp = 100, plantHp = 100;
