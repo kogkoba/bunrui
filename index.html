@@ -57,31 +57,17 @@ const plants = {
   "その他": { "asagao.png": "アサガオ", "ayame.png": "アヤメ" }
 };
 
+// 🌱 植物をランダムに選択する
 function getRandomPlant() {
-    console.log("🌱 植物をランダムに選択中...");
     const categoryKeys = Object.keys(plants);
-    
-    if (categoryKeys.length === 0) {
-        console.error("⚠️ 植物データが空です！");
-        return null;
-    }
-
     const category = categoryKeys[Math.floor(Math.random() * categoryKeys.length)];
     const plantKeys = Object.keys(plants[category]);
-
-    if (plantKeys.length === 0) {
-        console.error("⚠️ カテゴリ内の植物が空です！", category);
-        return null;
-    }
-
     const plantFile = plantKeys[Math.floor(Math.random() * plantKeys.length)];
     const plantName = plants[category][plantFile];
-
-    console.log("✅ 選ばれた植物:", plantName, `(${plantFile})`, "カテゴリ:", category);
     return { plantFile, plantName, category };
 }
 
-// 画像を正しくセットする
+// 🌿 画像をセット
 function showQuestion() {
     const { plantFile, plantName, category } = getRandomPlant();
     const plantImage = document.getElementById("plantImage");
@@ -126,7 +112,7 @@ bgmButton.addEventListener("click", () => {
     bgmPlaying = !bgmPlaying;
 });
 
-// ゲームを開始
+// 🎮 ゲーム開始
 showQuestion();
 </script>
 
