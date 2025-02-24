@@ -26,37 +26,6 @@
 <audio id="bgmLoop" src="https://kogkoba.github.io/bunrui/sciencebgm.mp3" loop></audio>
 <button id="bgmButton">BGM: OFF</button>
 
-<script>
-<script>
-// ✅ BGM ON/OFFボタンの処理
-let bgmPlaying = false;
-const bgm = document.getElementById("bgmLoop");
-const bgmButton = document.getElementById("bgmButton");
-
-// 初回のクリックでBGM再生できるようにする
-document.addEventListener("click", () => {
-    if (!bgmPlaying) {
-        bgm.play().then(() => {
-            console.log("🎵 BGM 再生開始");
-            bgmPlaying = true;
-            bgmButton.textContent = "BGM: ON";
-        }).catch(error => console.error("BGM再生エラー:", error));
-    }
-}, { once: true });
-
-// BGM ON/OFF トグル機能
-bgmButton.addEventListener("click", () => {
-    if (bgmPlaying) {
-        bgm.pause();
-        bgmButton.textContent = "BGM: OFF";
-    } else {
-        bgm.play().catch(error => console.error("BGM再生エラー:", error));
-        bgmButton.textContent = "BGM: ON";
-    }
-    bgmPlaying = !bgmPlaying;
-});
-</script>
-
 <!-- ゲームのコンテナ -->
 <div id="gameContainer">
   <div id="messageBox">植物が あらわれた！</div>
@@ -76,10 +45,18 @@ bgmButton.addEventListener("click", () => {
 </div>
 
 <script>
-// ✅ 69個の植物データ（省略）
 const IMAGE_FOLDER = "https://kogkoba.github.io/bunrui/";
 
-// 植物をランダムに選択する関数
+// ✅ 69個の植物データ
+const plants = {
+  "アブラナ科": { "aburanna.png": "アブラナ", "inugarashi.png": "イヌガラシ", "kabu.png": "カブ", "kyabetu.png": "キャベツ", "daikon.png": "ダイコン", "nazuna.png": "ナズナ", "wasabi.png": "ワサビ" },
+  "イネ科": { "ine.png": "イネ", "enokorogusa.png": "エノコログサ", "ohisiba.png": "オヒシバ" },
+  "ウリ科": { "amatyazuru.png": "アマチャヅル", "kabotya.png": "カボチャ" },
+  "キク科": { "onamomi.png": "オナモミ", "kiku.png": "キク", "kosumosu.png": "コスモス" },
+  "マメ科": { "inngennmame.png": "インゲンマメ", "enndou.png": "エンドウ" },
+  "その他": { "asagao.png": "アサガオ", "ayame.png": "アヤメ" }
+};
+
 function getRandomPlant() {
     console.log("🌱 植物をランダムに選択中...");
     const categoryKeys = Object.keys(plants);
@@ -121,20 +98,35 @@ function showQuestion() {
     document.getElementById("messageBox").textContent = `植物が ${plantName} をよんだ。`;
 }
 
-let playerHp = 100, plantHp = 100;
-function updateHpBars() {
-  document.getElementById("playerHpBar").style.width = `${Math.max(playerHp, 0)}%`;
-  document.getElementById("plantHpBar").style.width = `${Math.max(plantHp, 0)}%`;
-}
+// ✅ BGM ON/OFFボタンの処理
+let bgmPlaying = false;
+const bgm = document.getElementById("bgmLoop");
+const bgmButton = document.getElementById("bgmButton");
 
-function getRandomPlant() {
-  // ✅ ランダムな植物を選ぶ処理（省略）
-}
+// 初回のクリックでBGM再生できるようにする
+document.addEventListener("click", () => {
+    if (!bgmPlaying) {
+        bgm.play().then(() => {
+            console.log("🎵 BGM 再生開始");
+            bgmPlaying = true;
+            bgmButton.textContent = "BGM: ON";
+        }).catch(error => console.error("BGM再生エラー:", error));
+    }
+}, { once: true });
 
-function showQuestion() {
-  // ✅ 新しい問題を表示する処理（省略）
-}
+// BGM ON/OFF トグル機能
+bgmButton.addEventListener("click", () => {
+    if (bgmPlaying) {
+        bgm.pause();
+        bgmButton.textContent = "BGM: OFF";
+    } else {
+        bgm.play().catch(error => console.error("BGM再生エラー:", error));
+        bgmButton.textContent = "BGM: ON";
+    }
+    bgmPlaying = !bgmPlaying;
+});
 
+// ゲームを開始
 showQuestion();
 </script>
 
