@@ -19,14 +19,31 @@
   </style>
 </head>
 <body>
-<audio id="bgmStart" src="https://drive.google.com/uc?export=download&id=1ZYsRT4Pr39AYkD55mEZSsIyriKUuBwRs"></audio>
-<audio id="bgmLoop" src="https://drive.google.com/uc?export=download&id=1ZYsRT4Pr39AYkD55mEZSsIyriKUuBwRs" loop></audio>
+
+<!-- ✅ BGMの `<audio>` タグを1つにする -->
+<audio id="bgmLoop" loop></audio>
 
 <script>
+// ✅ Google Drive の MP3 ファイルURL
+const GOOGLE_DRIVE_MP3_URL = "https://drive.google.com/uc?export=download&id=1ZYsRT4Pr39AYkD55mEZSsIyriKUuBwRs";
+
+// ✅ Google Drive の MP3 をストリーミング再生する関数
+async function loadBGM() {
+  try {
+    const response = await fetch(GOOGLE_DRIVE_MP3_URL);
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    document.getElementById("bgmLoop").src = url;
+  } catch (error) {
+    console.error("BGMのロードに失敗しました:", error);
+  }
+}
+
+// ✅ ユーザーがクリックしたらBGMを再生
 document.addEventListener("click", () => {
-  document.getElementById("bgmStart").play();
-  document.getElementById("bgmStart").addEventListener("ended", () => {
-    document.getElementById("bgmLoop").play();
+  loadBGM().then(() => {
+    const bgm = document.getElementById("bgmLoop");
+    bgm.play();
   });
 });
 </script>
@@ -47,9 +64,6 @@ document.addEventListener("click", () => {
     <button class="category-button" data-category="その他">その他</button>
   </div>
 </div>
-
-<audio id="bgmStart" src="ドラクエ風始まり.mp3"></audio>
-<audio id="bgmLoop" src="ドラクエ風繰り返し.mp3" loop></audio>
 
 <script>
 const IMAGE_FOLDER = "https://kogkoba.github.io/bunrui/";
@@ -86,9 +100,6 @@ document.querySelectorAll(".category-button").forEach(button => {
   button.addEventListener("click", () => {
     const selectedCategory = button.dataset.category;
     const correctCategory = document.getElementById("plantImage").dataset.category;
-    
-    // 🌟 修正ポイント 🌟
-    // 「その他」だけは「科」をつけない！
     const correctText = correctCategory === "その他" ? "その他だった！" : `${correctCategory} だった！`;
 
     if (selectedCategory === correctCategory) {
@@ -103,12 +114,9 @@ document.querySelectorAll(".category-button").forEach(button => {
     setTimeout(() => {
       if (plantHp <= 0 || playerHp <= 0) location.reload();
       else showQuestion();
-    }, 1500); // 1.5秒間メッセージを表示
+    }, 1500);
   });
 });
-
-document.getElementById("bgmStart").play();
-document.getElementById("bgmStart").addEventListener("ended", () => document.getElementById("bgmLoop").play());
 
 showQuestion();
 </script>
