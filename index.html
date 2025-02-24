@@ -55,9 +55,9 @@ const plants = {
   "その他": { "asagao.png": "アサガオ", "ayame.png": "アヤメ" }
 };
 
-// ゲーム状態
+// 🎮 ゲーム状態
 let playerHp = 100, plantHp = 100;
-let currentCategory = ""; // 正解の科
+let currentCategory = ""; // 現在の植物の科
 
 // ✅ 植物をランダムに選択する
 function getRandomPlant() {
@@ -107,7 +107,7 @@ function setButtonEventListeners() {
                 document.getElementById("messageBox").textContent = `正解！\n${currentCategory}だった！\n植物に10のダメージ`;
                 plantHp -= 10;
             } else {
-                document.getElementById("messageBox").textContent = `ミス！\n植物は${currentCategory}だった。\n植物に10のダメージ`;
+                document.getElementById("messageBox").textContent = `ミス！\n植物は${currentCategory}だった。\nプレイヤーに10のダメージ`;
                 playerHp -= 10;
             }
 
