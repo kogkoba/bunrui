@@ -85,10 +85,10 @@ document.querySelectorAll(".category-button").forEach(button => {
     const correctText = correctCategory === "その他" ? "その他だった。" : `${correctCategory}だった。`;
 
     if (selectedCategory === correctCategory) {
-      plantHp -= 10;
+      plantHp -= 20;
       document.getElementById("messageBox").textContent = `正解！\n${correctText}\n植物に10のダメージ`;
     } else {
-      playerHp -= 10;
+      playerHp -= 20;
       document.getElementById("messageBox").textContent = `ミス！\n植物は${correctText}\nプレイヤーに10のダメージ`;
     }
 
