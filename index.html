@@ -5,11 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>植物の分類わけクイズゲーム</title>
   <style>
-    /* 全体レイアウト */
     body {
       background-color: black;
       color: white;
-      font-family: 'Press Start 2P', monospace; /* レトロゲーム風フォント（未導入の場合はmonospace） */
+      font-family: 'Press Start 2P', monospace; /* レトロ風フォント */
       margin: 0;
       padding: 0;
       text-align: center;
@@ -19,16 +18,14 @@
       margin: auto;
       padding: 10px;
     }
-    /* メッセージボックス：3行固定 */
     #messageBox {
-      height: 60px; /* 3行分の高さ */
+      height: 60px;
       border: 1px solid white;
       margin: 10px 0;
       padding: 5px;
       overflow: hidden;
       font-size: 14px;
     }
-    /* HPバー */
     .hp-bar {
       width: 100%;
       height: 20px;
@@ -47,14 +44,12 @@
     }
     #plantHP { margin-bottom: 10px; }
     #playerHP { margin-top: 10px; }
-    /* 植物画像 */
     #plantImage {
       width: 300px;
       height: 300px;
       background-color: gray;
       margin: 0 auto;
     }
-    /* ボタン */
     .button {
       background-color: #333;
       border: 1px solid white;
@@ -79,27 +74,18 @@
 </head>
 <body>
   <div id="gameContainer">
-    <!-- スタート画面 -->
     <div id="startScreen">
       <button id="startButton" class="button">スタート</button>
     </div>
     
-    <!-- ゲーム画面 -->
     <div id="gameScreen" style="display: none;">
-      <!-- 上部：植物HPバー -->
       <div id="plantHP" class="hp-bar">
         <div class="hp-text" id="plantHPText">植物HP: 100</div>
       </div>
-      
-      <!-- 中央：メッセージボックス -->
       <div id="messageBox"></div>
-      
-      <!-- 中央：植物画像 -->
       <div id="plantImageContainer">
         <img id="plantImage" src="" alt="植物画像">
       </div>
-      
-      <!-- 下部：分類選択ボタン -->
       <div id="classificationButtons">
         <button class="button classification" data-class="キク">キク</button>
         <button class="button classification" data-class="アブラナ">アブラナ</button>
@@ -108,24 +94,20 @@
         <button class="button classification" data-class="ウリ">ウリ</button>
         <button class="button classification" data-class="その他">その他</button>
       </div>
-      
-      <!-- 下部：プレイヤーHPバー -->
       <div id="playerHP" class="hp-bar">
         <div class="hp-text" id="playerHPText">プレイヤーHP: 100</div>
       </div>
-      
-      <!-- ゲーム終了後：くちぶえボタン -->
       <div id="endScreen" style="display: none;">
         <button id="mouthButton" class="button">▶くちぶえ</button>
       </div>
     </div>
   </div>
   
-  <!-- 背景BGM（ループ再生） -->
+  <!-- BGM -->
   <audio id="bgm" src="https://kogkoba.github.io/bunrui/sciencebgm.mp3" loop></audio>
   
   <script>
-    // サンプルの植物データ（実際は69種のリストを使用）
+    // サンプルの植物データ（実際は69種を使用）
     const plants = [
       { file: "aburanna.png", classification: "アブラナ", name: "アブラナ" },
       { file: "kiku.png", classification: "キク", name: "キク" },
@@ -139,7 +121,6 @@
     let plantHP = 100;
     let playerHP = 100;
     
-    // 各種DOM要素の取得
     const startButton = document.getElementById('startButton');
     const gameScreen = document.getElementById('gameScreen');
     const messageBox = document.getElementById('messageBox');
@@ -151,55 +132,40 @@
     const endScreen = document.getElementById('endScreen');
     const bgm = document.getElementById('bgm');
     
-    // スタートボタン押下でゲーム開始
     startButton.addEventListener('click', startGame);
     
-    // 分類選択ボタンのイベント設定
     classificationButtons.forEach(button => {
       button.addEventListener('click', () => {
-        // クリック演出：ボタンに「▶」を一瞬表示
         const originalText = button.innerText;
         button.innerText = "▶" + originalText;
-        setTimeout(() => {
-          button.innerText = originalText;
-        }, 200);
-        
+        setTimeout(() => { button.innerText = originalText; }, 200);
         handleAnswer(button.getAttribute('data-class'));
       });
     });
     
-    // くちぶえボタン（ゲーム終了後）のイベント設定
-    mouthButton.addEventListener('click', () => {
-      // 今回はリロードして再スタート
-      location.reload();
-    });
+    mouthButton.addEventListener('click', () => { location.reload(); });
     
-    // ゲーム開始処理
     function startGame() {
       document.getElementById('startScreen').style.display = 'none';
       gameScreen.style.display = 'block';
-      bgm.play();
+      // ユーザー操作によりBGM再生（ブラウザ自動再生制限対策）
+      bgm.play().catch(error => { console.error("BGM再生エラー:", error); });
       nextQuestion();
     }
     
-    // 次の問題を出題
     function nextQuestion() {
+      console.log("次の問題を出題します");
       messageBox.innerText = "";
-      // ランダムに植物を選択
       currentPlant = plants[Math.floor(Math.random() * plants.length)];
-      // 画像フォルダは https://kogkoba.github.io/science2/ を使用
       plantImage.src = "https://kogkoba.github.io/science2/" + currentPlant.file;
-      // メッセージの表示
       messageBox.innerText = "植物が　あらわれた。";
       setTimeout(() => {
         messageBox.innerText = "植物は " + currentPlant.name + " を　くりだした。";
       }, 400);
     }
     
-    // 回答処理
     function handleAnswer(selectedClass) {
       if(selectedClass === currentPlant.classification) {
-        // 正解の場合
         messageBox.innerText = currentPlant.name + " は　" + currentPlant.classification + " だ";
         setTimeout(() => {
           messageBox.innerText = "植物に20のダメージ";
@@ -211,7 +177,6 @@
           }
         }, 1000);
       } else {
-        // 不正解の場合
         messageBox.innerText = "ミス！";
         setTimeout(() => {
           messageBox.innerText = currentPlant.name + " は　" + currentPlant.classification + " だ";
@@ -228,13 +193,11 @@
       }
     }
     
-    // HPバーの更新
     function updateHP() {
       plantHPText.innerText = "植物HP: " + Math.max(plantHP, 0);
       playerHPText.innerText = "プレイヤーHP: " + Math.max(playerHP, 0);
     }
     
-    // ゲーム終了判定
     function checkGameOver() {
       if(plantHP <= 0 || playerHP <= 0) {
         if(plantHP <= 0) {
@@ -242,12 +205,10 @@
         } else {
           messageBox.innerText = "プレイヤーは　たおれた。";
         }
-        // ゲーム要素の非表示
         plantImage.style.display = "none";
         classificationButtons.forEach(btn => btn.style.display = "none");
         document.getElementById('plantHP').style.display = "none";
         document.getElementById('playerHP').style.display = "none";
-        // くちぶえボタン表示
         endScreen.style.display = "block";
       }
     }
