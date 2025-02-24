@@ -61,8 +61,9 @@
 
 <script>
 const IMAGE_FOLDER = "https://kogkoba.github.io/bunrui/images/";
+
 const plantData = {
-  "aburana.png": "アブラナ",
+  "aburanna.png": "アブラナ", 
   "ine.png": "イネ",
   "suika.png": "ウリ",
   "himawari.png": "キク"
@@ -92,7 +93,15 @@ function showQuestion() {
   let plantName = plantData[currentImage];
   let imageUrl = IMAGE_FOLDER + currentImage;
 
-  document.getElementById("plantImage").src = imageUrl;
+  console.log("選択された画像:", currentImage);
+  console.log("画像URL:", imageUrl);
+
+  let plantImage = document.getElementById("plantImage");
+  plantImage.src = imageUrl;
+  plantImage.onerror = function() {
+    console.error("画像が読み込めません: " + imageUrl);
+  };
+
   document.getElementById("messageBox").textContent = `植物は ${plantName} を はなった！`;
 }
 
@@ -120,6 +129,8 @@ function handleAnswer(category) {
     setTimeout(showQuestion, 1000);
   }
 }
+
+document.addEventListener("DOMContentLoaded", showQuestion);
 </script>
 
 </body>
