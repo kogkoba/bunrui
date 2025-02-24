@@ -19,6 +19,17 @@
   </style>
 </head>
 <body>
+<audio id="bgmStart" src="https://drive.google.com/uc?export=download&id=1ZYsRT4Pr39AYkD55mEZSsIyriKUuBwRs"></audio>
+<audio id="bgmLoop" src="https://drive.google.com/uc?export=download&id=1ZYsRT4Pr39AYkD55mEZSsIyriKUuBwRs" loop></audio>
+
+<script>
+document.addEventListener("click", () => {
+  document.getElementById("bgmStart").play();
+  document.getElementById("bgmStart").addEventListener("ended", () => {
+    document.getElementById("bgmLoop").play();
+  });
+});
+</script>
 
 <div id="gameContainer">
   <div id="messageBox">戦いが はじまった！</div>
