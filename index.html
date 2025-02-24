@@ -20,7 +20,7 @@
 </head>
 <body>
 
-<!-- ✅ BGMを `<audio>` で直接再生 -->
+<!-- ✅ BGM -->
 <audio id="bgmLoop" src="https://drive.google.com/uc?export=download&id=1ZYsRT4Pr39AYkD55mEZSsIyriKUuBwRs" loop></audio>
 
 <script>
@@ -31,7 +31,7 @@ document.addEventListener("click", () => {
 </script>
 
 <div id="gameContainer">
-  <div id="messageBox">戦いが はじまった！</div>
+  <div id="messageBox">植物が あらわれた！</div>
   <div class="hp-label">植物 HP</div>
   <div class="hp-bar" id="plantHpBar"></div>
   <img id="plantImage" src="" alt="植物の画像">
@@ -50,15 +50,18 @@ document.addEventListener("click", () => {
 <script>
 const IMAGE_FOLDER = "https://kogkoba.github.io/bunrui/";
 const plants = {
-  "アブラナ科": ["aburanna.png", "inugarashi.png", "kabu.png", "kyabetu.png", "daikon.png", "nazuna.png", "wasabi.png"],
-  "イネ科": ["ine.png", "enokorogusa.png", "ohisiba.png", "komugi.png", "sasa.png", "susuki.png", "suzumenokatabira.png", "suzumenoteppou.png", "take.png", "toumorokoshi.png", "mehisiba.png"],
-  "ウリ科": ["amatyazuru.png", "kabotya.png", "karasuuri.png", "kyuuri.png", "suika.png", "hetima.png", "yuugao.png"],
-  "キク科": ["onamomi.png", "kiku.png", "kosumosu.png", "seitakaawadatisou.png", "senndanngusa.png", "daria.png", "tannpopo.png", "noazami.png", "nogeshi.png", "haruzion.png", "himawari.png", "himezyoon.png", "hyakunitisou.png", "ma-garetto.png", "mari-go-rudo.png"],
-  "マメ科": ["inngennmame.png", "enndou.png", "ozigisou.png", "karasunoenndou.png", "kuzu.png", "gennge.png", "sirotumegusa.png", "sui-topi.png", "nemunoki.png", "hagi.png", "fuzi.png"],
-  "その他": ["asagao.png", "ayame.png", "oobako.png", "osiroibana.png", "katabami.png", "guraziorasu.png", "sakura.png", "zyagaimo.png", "suisen.png", "tutuzi.png", "tubaki.png", "tuyukusa.png", "higannbana.png", "hiyasinnsu.png", "housennka.png", "yadorigi.png", "yamabuki.png", "yuri.png"]
+  "アブラナ科": ["aburanna", "inugarashi", "kabu", "kyabetu", "daikon", "nazuna", "wasabi"],
+  "イネ科": ["ine", "enokorogusa", "ohisiba", "komugi", "sasa", "susuki", "suzumenokatabira", "suzumenoteppou", "take", "toumorokoshi", "mehisiba"],
+  "ウリ科": ["amatyazuru", "kabotya", "karasuuri", "kyuuri", "suika", "hetima", "yuugao"],
+  "キク科": ["onamomi", "kiku", "kosumosu", "seitakaawadatisou", "senndanngusa", "daria", "tannpopo", "noazami", "nogeshi", "haruzion", "himawari", "himezyoon", "hyakunitisou", "ma-garetto", "mari-go-rudo"],
+  "マメ科": ["inngennmame", "enndou", "ozigisou", "karasunoenndou", "kuzu", "gennge", "sirotumegusa", "sui-topi", "nemunoki", "hagi", "fuzi"],
+  "その他": ["asagao", "ayame", "oobako", "osiroibana", "katabami", "guraziorasu", "sakura", "zyagaimo", "suisen", "tutuzi", "tubaki", "tuyukusa", "higannbana", "hiyasinnsu", "housennka", "yadorigi", "yamabuki", "yuri"]
 };
 
 let playerHp = 100, plantHp = 100;
+let lastPlantName = ""; // 前回の植物の名前
+let isFirstEncounter = true; // 最初の戦闘かどうか
+
 function updateHpBars() {
   document.getElementById("playerHpBar").style.width = `${Math.max(playerHp, 0)}%`;
   document.getElementById("plantHpBar").style.width = `${Math.max(plantHp, 0)}%`;
@@ -72,9 +75,17 @@ function getRandomPlant() {
 
 function showQuestion() {
   const { plant, category } = getRandomPlant();
-  document.getElementById("plantImage").src = IMAGE_FOLDER + plant;
+  document.getElementById("plantImage").src = IMAGE_FOLDER + plant + ".png";
   document.getElementById("plantImage").dataset.category = category;
-  document.getElementById("messageBox").textContent = "植物が あらわれた！";
+
+  if (isFirstEncounter) {
+    document.getElementById("messageBox").textContent = "植物が あらわれた！";
+    isFirstEncounter = false;
+  } else {
+    document.getElementById("messageBox").textContent = `植物は ${plant} をよんだ。`;
+  }
+
+  lastPlantName = plant; // 今回の植物を記録
   updateHpBars();
 }
 
@@ -85,11 +96,11 @@ document.querySelectorAll(".category-button").forEach(button => {
     const correctText = correctCategory === "その他" ? "その他だった。" : `${correctCategory}だった。`;
 
     if (selectedCategory === correctCategory) {
-      plantHp -= 20;
-      document.getElementById("messageBox").textContent = `正解！\n${correctText}\n植物に10のダメージ`;
+      plantHp -= 10;
+      document.getElementById("messageBox").textContent = `正解！\n${lastPlantName} は ${correctText}\n植物に10のダメージ`;
     } else {
-      playerHp -= 20;
-      document.getElementById("messageBox").textContent = `ミス！\n植物は${correctText}\nプレイヤーに10のダメージ`;
+      playerHp -= 10;
+      document.getElementById("messageBox").textContent = `ミス！\n${lastPlantName} は ${correctText}\nプレイヤーに10のダメージ`;
     }
 
     updateHpBars();
