@@ -28,12 +28,18 @@ document.addEventListener("click", async () => {
   const audio = document.getElementById("bgmLoop");
   if (!audio.src) {
     console.log("🎵 BGMをロード中...");
-    const response = await fetch("https://drive.google.com/uc?export=download&id=1ZYsRT4Pr39AYkD55mEZSsIyriKUuBwRs");
-    const blob = await response.blob();
-    const objectURL = URL.createObjectURL(blob);
-    audio.src = objectURL;
+    try {
+      const response = await fetch("https://drive.google.com/uc?export=download&id=1ZYsRT4Pr39AYkD55mEZSsIyriKUuBwRs");
+      if (!response.ok) throw new Error("BGMのダウンロードに失敗しました");
+      const blob = await response.blob();
+      const objectURL = URL.createObjectURL(blob);
+      audio.src = objectURL;
+      console.log("✅ BGMロード完了！");
+    } catch (error) {
+      console.error("❌ BGMロードエラー:", error);
+    }
   }
-  audio.play();
+  audio.play().catch(error => console.error("❌ BGM再生エラー:", error));
 });
 </script>
 
@@ -98,6 +104,25 @@ document.addEventListener("DOMContentLoaded", () => {
     isFirstEncounter = false;
     updateHpBars();
   }
+
+  document.querySelectorAll(".category-button").forEach(button => {
+    button.addEventListener("click", (event) => {
+      const selectedCategory = event.target.dataset.category;
+      const correctCategory = document.getElementById("plantImage").dataset.category;
+      console.log(`🟢 選択: ${selectedCategory}, 正解: ${correctCategory}`);
+
+      if (selectedCategory === correctCategory) {
+        document.getElementById("messageBox").textContent = `正解！\n${lastPlantName} は ${correctCategory} だった！\n植物に10のダメージ！`;
+        plantHp -= 10;
+      } else {
+        document.getElementById("messageBox").textContent = `ミス！\n${lastPlantName} は ${correctCategory} だった！\nプレイヤーに10のダメージ！`;
+        playerHp -= 10;
+      }
+
+      updateHpBars();
+      setTimeout(() => { if (playerHp > 0 && plantHp > 0) showQuestion(); }, 1500);
+    });
+  });
 
   showQuestion();
 });
