@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <!-- スマホ向け縦長（固定幅320px） -->
   <meta name="viewport" content="width=320, initial-scale=1.0">
   <title>植物の分類わけクイズゲーム</title>
   <style>
@@ -15,7 +16,7 @@
       text-align: center;
     }
     #gameContainer {
-      width: 320px;  /* スマホ向けの固定幅 */
+      width: 320px;  /* 固定幅 */
       margin: 0 auto;
       padding: 10px;
     }
@@ -47,14 +48,23 @@
     }
     #plantHP { margin-bottom: 10px; }
     #playerHP { margin-top: 10px; }
-    /* 植物画像 */
-    #plantImage {
+    /* 画像表示領域（固定サイズ、枠付き） */
+    #plantImageContainer {
       width: 300px;
       height: 300px;
-      background-color: gray;
-      margin: 0 auto;
+      margin: 10px auto;
+      border: 1px solid white;
+      background-color: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
     }
-    /* ボタン */
+    #plantImage {
+      max-width: 100%;
+      max-height: 100%;
+    }
+    /* ボタン全般 */
     .button {
       background-color: #333;
       border: 1px solid white;
@@ -72,8 +82,16 @@
       font-size: 20px;
       margin: 20px;
     }
+    /* 選択肢エリア（固定位置、枠付き） */
     #classificationButtons {
-      margin: 10px 0;
+      width: 300px;
+      height: 120px; /* 必要に応じて調整 */
+      border: 1px solid white;
+      margin: 10px auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      align-items: center;
     }
   </style>
 </head>
@@ -94,7 +112,7 @@
       <!-- メッセージボックス -->
       <div id="messageBox"></div>
       
-      <!-- 植物画像 -->
+      <!-- 植物画像（固定サイズ、枠付き） -->
       <div id="plantImageContainer">
         <img id="plantImage" src="" alt="植物画像">
       </div>
@@ -104,7 +122,7 @@
         <button id="bgmToggle" class="button">BGM: ON</button>
       </div>
       
-      <!-- 分類選択ボタン -->
+      <!-- 選択肢エリア（固定位置、枠付き） -->
       <div id="classificationButtons">
         <button class="button classification" data-class="キク">キク</button>
         <button class="button classification" data-class="アブラナ">アブラナ</button>
@@ -269,7 +287,7 @@
       if(selectedClass === currentPlant.classification) {
         messageBox.innerText = currentPlant.name + " は　" + currentPlant.classification + " だ";
         setTimeout(() => {
-          messageBox.innerText = "植物に20のダメージ";
+          messageBox.innerText = "正解！ 植物に20のダメージ";
           plantHP -= 20;
           updateHP();
           checkGameOver();
