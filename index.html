@@ -276,7 +276,7 @@
       console.log("次の問題を出題します");
       messageBox.innerText = "";
       currentPlant = plants[Math.floor(Math.random() * plants.length)];
-      plantImage.src = "https://kogkoba.github.io/science2/" + currentPlant.file;
+      plantImage.src = "mine/image/" + currentPlant.file;
       messageBox.innerText = "植物が　あらわれた。";
       setTimeout(() => {
         messageBox.innerText = "植物は " + currentPlant.name + " を　くりだした。";
