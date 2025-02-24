@@ -21,12 +21,32 @@
 <body>
 
 
+<!-- ✅ BGM -->
 <audio id="bgmLoop" preload="auto" loop>
   <source src="https://kogkoba.github.io/bunrui/sciencebgm.mp3" type="audio/mp3">
 </audio>
 
-<!-- BGMのON/OFFボタン -->
-<button id="bgmToggle" class="bgm-button">BGM: ON</button>
+<!-- ✅ ゲームコンテナ内にBGMのON/OFFボタンを配置 -->
+<div id="gameContainer">
+  <div id="messageBox">植物が あらわれた！</div>
+  <div class="hp-label">植物 HP</div>
+  <div class="hp-bar" id="plantHpBar"></div>
+  <img id="plantImage" src="" alt="植物の画像">
+  <div class="hp-label">プレイヤー HP</div>
+  <div class="hp-bar" id="playerHpBar"></div>
+  
+  <!-- ✅ BGMのON/OFFボタン -->
+  <button id="bgmToggle" class="bgm-button">BGM: ON</button>
+
+  <div id="categoryButtons">
+    <button class="category-button" data-category="アブラナ科">アブラナ科</button>
+    <button class="category-button" data-category="イネ科">イネ科</button>
+    <button class="category-button" data-category="ウリ科">ウリ科</button>
+    <button class="category-button" data-category="キク科">キク科</button>
+    <button class="category-button" data-category="マメ科">マメ科</button>
+    <button class="category-button" data-category="その他">その他</button>
+  </div>
+</div>
 
 <script>
 const bgm = document.getElementById("bgmLoop");
@@ -58,6 +78,25 @@ document.addEventListener("click", async () => {
   }
 }, { once: true }); // 🔥 1回だけ実行
 </script>
+
+<style>
+/* ✅ BGMボタンのデザイン */
+.bgm-button {
+  display: block;
+  margin: 10px auto;
+  padding: 5px 10px;
+  font-size: 1em;
+  cursor: pointer;
+  background-color: black;
+  color: white;
+  border: 1px solid white;
+  width: 120px;
+}
+.bgm-button:hover {
+  background-color: white;
+  color: black;
+}
+</style>
 
 <style>
 .bgm-button {
