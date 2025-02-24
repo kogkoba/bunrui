@@ -1,3 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>植物バトルゲーム</title>
+  <style>
+    body { background-color: black; color: white; text-align: center; font-family: 'Courier New', monospace; }
+    #gameContainer { display: inline-block; border: 2px solid white; padding: 10px; width: 320px; background-color: black; }
+    #messageBox { border: 2px solid white; padding: 10px; margin-bottom: 10px; font-size: 1.2em; height: auto; min-height: 4.5em; white-space: pre-line; }
+    #plantImage {
+      width: 200px; height: 200px; object-fit: contain;
+      display: block; margin: 10px auto; border: 2px solid white;
+    }
+    #categoryButtons { display: flex; flex-wrap: wrap; justify-content: center; }
+    .category-button { margin: 5px; padding: 5px; font-size: 1em; cursor: pointer; background-color: black; color: white; border: 1px solid white; width: 100px; }
+    .category-button:hover { background-color: white; color: black; }
+    .hp-bar { width: 100%; height: 20px; background-color: red; margin: 5px 0; }
+    .hp-label { font-size: 1.2em; }
+  </style>
+</head>
+<body>
+
+<div id="gameContainer">
+  <div id="messageBox">戦いが はじまった！</div>
+  <div class="hp-label">植物 HP</div>
+  <div class="hp-bar" id="plantHpBar"></div>
+  <img id="plantImage" src="" alt="植物の画像">
+  <div class="hp-label">プレイヤー HP</div>
+  <div class="hp-bar" id="playerHpBar"></div>
+  <div id="categoryButtons">
+    <button class="category-button" data-category="アブラナ科">アブラナ科</button>
+    <button class="category-button" data-category="イネ科">イネ科</button>
+    <button class="category-button" data-category="ウリ科">ウリ科</button>
+    <button class="category-button" data-category="キク科">キク科</button>
+    <button class="category-button" data-category="マメ科">マメ科</button>
+    <button class="category-button" data-category="その他">その他</button>
+  </div>
+</div>
+
+<audio id="bgmStart" src="ドラクエ風始まり.mp3"></audio>
+<audio id="bgmLoop" src="ドラクエ風繰り返し.mp3" loop></audio>
+
 <script>
 const IMAGE_FOLDER = "https://kogkoba.github.io/bunrui/";
 const plants = {
@@ -33,11 +75,8 @@ document.querySelectorAll(".category-button").forEach(button => {
   button.addEventListener("click", () => {
     const selectedCategory = button.dataset.category;
     const correctCategory = document.getElementById("plantImage").dataset.category;
+    const correctText = correctCategory === "その他" ? "その他だった！" : `${correctCategory}科 だった！`;
     
-    // 🌟 修正ポイント 🌟
-    // 「その他」だけは「科」をつけない！
-    const correctText = correctCategory === "その他" ? "その他だった！" : `${correctCategory} だった！`;
-
     if (selectedCategory === correctCategory) {
       plantHp -= 10;
       document.getElementById("messageBox").textContent = `正解！\n${correctText}`;
@@ -59,3 +98,6 @@ document.getElementById("bgmStart").addEventListener("ended", () => document.get
 
 showQuestion();
 </script>
+
+</body>
+</html>
