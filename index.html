@@ -32,6 +32,13 @@ document.addEventListener("click", () => {
 </script>
 
 <script>
+document.addEventListener("click", () => {
+  const audio = document.getElementById("bgmLoop");
+  audio.play().catch(error => console.error("❌ BGM再生エラー:", error));
+});
+</script>
+
+<script>
 document.addEventListener("click", async () => {
   const audio = document.getElementById("bgmLoop");
   if (!audio.src) {
