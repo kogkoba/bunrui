@@ -6,120 +6,92 @@
   <style>
     body { background-color: black; color: white; text-align: center; font-family: 'Courier New', monospace; }
     #gameContainer { display: inline-block; border: 2px solid white; padding: 10px; width: 320px; background-color: black; }
-    #messageBox {
-      border: 2px solid white; padding: 5px; margin-bottom: 10px;
-      font-size: 1.2em; height: 4.5em;
-      display: flex; align-items: center; justify-content: center; text-align: center;
-    }
+    #messageBox { border: 2px solid white; padding: 5px; margin-bottom: 10px; font-size: 1.2em; height: 4.5em; display: flex; align-items: center; justify-content: center; }
     #plantImage {
       width: 200px; height: 200px; object-fit: contain;
       display: block; margin: 10px auto; border: 2px solid white;
     }
-    .hp-label { font-size: 1.2em; margin-top: 5px; }
-    .hp-bar-container { width: 90%; height: 20px; background-color: gray; margin: 5px auto; position: relative; }
-    .hp-bar {
-      width: 100%; height: 100%;
-      background: linear-gradient(to right, red, darkred);
-      transition: width 0.5s ease-in-out;
-    }
     #categoryButtons { display: flex; flex-wrap: wrap; justify-content: center; }
-    .category-button {
-      margin: 5px; padding: 5px; font-size: 1em; cursor: pointer;
-      background-color: black; color: white; border: 1px solid white; width: 100px;
-    }
+    .category-button { margin: 5px; padding: 5px; font-size: 1em; cursor: pointer; background-color: black; color: white; border: 1px solid white; width: 100px; }
     .category-button:hover { background-color: white; color: black; }
-    #continueButton {
-      display: none; margin-top: 10px; padding: 10px; font-size: 1.2em;
-      background-color: black; color: white; border: 2px solid white; cursor: pointer;
-    }
+    .hp-bar { width: 100%; height: 20px; background-color: red; margin: 5px 0; }
+    .hp-label { font-size: 1.2em; }
   </style>
 </head>
 <body>
 
 <div id="gameContainer">
-  <div id="messageBox">植物が あらわれた！</div>
-
+  <div id="messageBox">戦いが はじまった！</div>
   <div class="hp-label">植物 HP</div>
-  <div class="hp-bar-container"><div class="hp-bar" id="plantHpBar"></div></div>
-
+  <div class="hp-bar" id="plantHpBar"></div>
   <img id="plantImage" src="" alt="植物の画像">
-
   <div class="hp-label">プレイヤー HP</div>
-  <div class="hp-bar-container"><div class="hp-bar" id="playerHpBar"></div></div>
-
+  <div class="hp-bar" id="playerHpBar"></div>
   <div id="categoryButtons">
-    <button class="category-button" data-category="キク">キク</button>
-    <button class="category-button" data-category="アブラナ">アブラナ</button>
-    <button class="category-button" data-category="イネ">イネ</button>
-    <button class="category-button" data-category="マメ">マメ</button>
-    <button class="category-button" data-category="ウリ">ウリ</button>
+    <button class="category-button" data-category="アブラナ科">アブラナ科</button>
+    <button class="category-button" data-category="イネ科">イネ科</button>
+    <button class="category-button" data-category="ウリ科">ウリ科</button>
+    <button class="category-button" data-category="キク科">キク科</button>
+    <button class="category-button" data-category="マメ科">マメ科</button>
     <button class="category-button" data-category="その他">その他</button>
   </div>
-
-  <button id="continueButton">▶ くちぶえ</button>
 </div>
+
+<audio id="bgmStart" src="ドラクエ風始まり.mp3"></audio>
+<audio id="bgmLoop" src="ドラクエ風繰り返し.mp3" loop></audio>
 
 <script>
 const IMAGE_FOLDER = "https://kogkoba.github.io/bunrui/images/";
-const plantData = {
-  "aburana.png": "アブラナ",
-  "ine.png": "イネ",
-  "suika.png": "ウリ",
-  "himawari.png": "キク"
+const plants = {
+  "アブラナ科": ["aburanna.png", "inugarashi.png", "kabu.png", "kyabetu.png", "daikon.png", "nazuna.png", "wasabi.png"],
+  "イネ科": ["ine.png", "enokorogusa.png", "ohisiba.png", "komugi.png", "sasa.png", "susuki.png", "suzumenokatabira.png", "suzumenoteppou.png", "take.png", "toumorokoshi.png", "mehisiba.png"],
+  "ウリ科": ["amatyazuru.png", "kabotya.png", "karasuuri.png", "kyuuri.png", "suika.png", "hetima.png", "yuugao.png"],
+  "キク科": ["onamomi.png", "kiku.png", "kosumosu.png", "seitakaawadatisou.png", "senndanngusa.png", "daria.png", "tannpopo.png", "noazami.png", "nogeshi.png", "haruzion.png", "himawari.png", "himezyoon.png", "hyakunitisou.png", "ma-garetto.png", "mari-go-rudo.png"],
+  "マメ科": ["inngennmame.png", "enndou.png", "ozigisou.png", "karasunoenndou.png", "kuzu.png", "gennge.png", "sirotumegusa.png", "sui-topi.png", "nemunoki.png", "hagi.png", "fuzi.png"],
+  "その他": ["asagao.png", "ayame.png", "oobako.png", "osiroibana.png", "katabami.png", "guraziorasu.png", "sakura.png", "zyagaimo.png", "suisen.png", "tutuzi.png", "tubaki.png", "tuyukusa.png", "higannbana.png", "hiyasinnsu.png", "housennka.png", "yadorigi.png", "yamabuki.png", "yuri.png"]
 };
 
-const plantCategories = {
-  "アブラナ": "アブラナ科",
-  "イネ": "イネ科",
-  "ウリ": "ウリ科",
-  "キク": "キク科"
-};
-
-let playerHp = 50;
-let plantHp = 50;
-let currentImage = "";
-
+let playerHp = 50, plantHp = 50;
 function updateHpBars() {
-  document.getElementById("playerHpBar").style.width = `${(playerHp / 50) * 100}%`;
-  document.getElementById("plantHpBar").style.width = `${(plantHp / 50) * 100}%`;
+  document.getElementById("playerHpBar").style.width = `${playerHp}%`;
+  document.getElementById("plantHpBar").style.width = `${plantHp}%`;
+}
+
+function getRandomPlant() {
+  const category = Object.keys(plants)[Math.floor(Math.random() * Object.keys(plants).length)];
+  const plant = plants[category][Math.floor(Math.random() * plants[category].length)];
+  return { plant, category };
 }
 
 function showQuestion() {
-  let keys = Object.keys(plantData);
-  let randomIndex = Math.floor(Math.random() * keys.length);
-  currentImage = keys[randomIndex];
-
-  let plantName = plantData[currentImage];
-  let imageUrl = IMAGE_FOLDER + currentImage;
-
-  document.getElementById("plantImage").src = imageUrl;
-  document.getElementById("messageBox").textContent = `植物は ${plantName} を はなった！`;
+  const { plant, category } = getRandomPlant();
+  document.getElementById("plantImage").src = IMAGE_FOLDER + plant;
+  document.getElementById("plantImage").dataset.category = category;
+  document.getElementById("messageBox").textContent = "植物が あらわれた！";
 }
 
-function handleAnswer(category) {
-  let messageBox = document.getElementById("messageBox");
-  let plantName = plantData[currentImage];
-  let correctCategory = plantName;
-  let plantFamily = plantCategories[correctCategory] || "";
+document.querySelectorAll(".category-button").forEach(button => {
+  button.addEventListener("click", () => {
+    const selectedCategory = button.dataset.category;
+    const correctCategory = document.getElementById("plantImage").dataset.category;
+    if (selectedCategory === correctCategory) {
+      plantHp -= 10;
+      document.getElementById("messageBox").textContent = `正解！${correctCategory} に 10 のダメージ！`;
+    } else {
+      playerHp -= 10;
+      document.getElementById("messageBox").textContent = `ミス！${correctCategory}科 だった！プレイヤーに 10 のダメージ！`;
+    }
+    updateHpBars();
+    if (plantHp <= 0) setTimeout(() => location.reload(), 1000);
+    else if (playerHp <= 0) setTimeout(() => location.reload(), 1000);
+    else setTimeout(showQuestion, 1000);
+  });
+});
 
-  if (correctCategory === category) {
-    plantHp -= 10;
-    messageBox.innerHTML = `正解！ 植物にダメージ！<br>${plantName} は ${plantFamily} だ！`;
-  } else {
-    playerHp -= 10;
-    messageBox.innerHTML = `ミス！ プレイヤーにダメージ！<br>${plantName} は ${plantFamily} だ！`;
-  }
+document.getElementById("bgmStart").play();
+document.getElementById("bgmStart").addEventListener("ended", () => document.getElementById("bgmLoop").play());
 
-  updateHpBars();
-
-  if (plantHp <= 0) {
-    messageBox.innerHTML = "植物は　たおれた。";
-  } else if (playerHp <= 0) {
-    messageBox.innerHTML = "プレイヤーは　たおれた。。";
-  } else {
-    setTimeout(showQuestion, 1000);
-  }
-}
+showQuestion();
 </script>
 
 </body>
