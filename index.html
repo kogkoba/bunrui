@@ -125,6 +125,7 @@
       
       <!-- 選択肢エリア（固定位置、枠付き） -->
       <div id="classificationButtons">
+        <!-- ボタンの data-class を「アブラナ」「イネ」「ウリ」「キク」「マメ」「その他」に揃える -->
         <button class="button classification" data-class="キク">キク</button>
         <button class="button classification" data-class="アブラナ">アブラナ</button>
         <button class="button classification" data-class="イネ">イネ</button>
@@ -149,13 +150,14 @@
   <audio id="bgm" src="https://kogkoba.github.io/bunrui/sciencebgm.mp3" loop></audio>
   
   <script>
-    // 画像ファイルは "image/" フォルダを参照する想定
-    // index.html と image/ が同じ階層にある
-    // 例： bunrui/index.html と bunrui/image/aburanna.png
+    // 画像ファイルは "images/" フォルダを参照する想定
+    // index.html と images/ が同じ階層にある
+    // 例： bunrui/index.html と bunrui/images/aburanna.png
     const plants = [
+      // 例として2種のみ記載（実際は69種分を追加）
       { file: "aburanna.png", classification: "アブラナ", name: "アブラナ" },
-      { file: "kiku.png", classification: "キク", name: "キク" },
-      // ... 69種ぶん続く ...
+      { file: "kiku.png",     classification: "キク",     name: "キク" }
+      // ... ここに他のファイルを追加 ...
     ];
     
     let currentPlant = null;
@@ -182,6 +184,7 @@
     classificationButtons.forEach(button => {
       button.addEventListener('click', () => {
         const originalText = button.innerText;
+        // クリック演出：一瞬「▶」を表示
         button.innerText = "▶" + originalText;
         setTimeout(() => { button.innerText = originalText; }, 200);
         handleAnswer(button.getAttribute('data-class'));
@@ -212,8 +215,8 @@
     function nextQuestion() {
       messageBox.innerText = "";
       currentPlant = plants[Math.floor(Math.random() * plants.length)];
-      // フォルダ名 "image/" + ファイル名 で参照
-      plantImage.src = "image/" + currentPlant.file;  
+      // images/ フォルダから読み込む
+      plantImage.src = "images/" + currentPlant.file;
       messageBox.innerText = "植物が　あらわれた。";
       setTimeout(() => {
         messageBox.innerText = "植物は " + currentPlant.name + " を　くりだした。";
@@ -221,14 +224,14 @@
     }
     
     function handleAnswer(selectedClass) {
-      if(selectedClass === currentPlant.classification) {
+      if (selectedClass === currentPlant.classification) {
         messageBox.innerText = currentPlant.name + " は　" + currentPlant.classification + " だ";
         setTimeout(() => {
           messageBox.innerText = "正解！ 植物に20のダメージ";
           plantHP -= 20;
           updateHP();
           checkGameOver();
-          if(plantHP > 0) {
+          if (plantHP > 0) {
             setTimeout(nextQuestion, 1000);
           }
         }, 1000);
@@ -241,7 +244,7 @@
             playerHP -= 20;
             updateHP();
             checkGameOver();
-            if(playerHP > 0) {
+            if (playerHP > 0) {
               setTimeout(nextQuestion, 1000);
             }
           }, 1000);
@@ -255,8 +258,8 @@
     }
     
     function checkGameOver() {
-      if(plantHP <= 0 || playerHP <= 0) {
-        if(plantHP <= 0) {
+      if (plantHP <= 0 || playerHP <= 0) {
+        if (plantHP <= 0) {
           messageBox.innerText = "植物は　たおれた。";
         } else {
           messageBox.innerText = "プレイヤーは　たおれた。";
